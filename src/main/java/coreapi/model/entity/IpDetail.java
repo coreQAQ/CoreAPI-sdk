@@ -1,12 +1,14 @@
-package com.core.coreapisdk.model;
+package coreapi.model.entity;
 
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * IP归属地精简信息
  */
 @Data
-public class IpDetail {
+public class IpDetail implements Serializable {
 
     /**
      * 客户端 IP
@@ -53,6 +55,6 @@ public class IpDetail {
      */
     private String timeZone;
 
-
+    private static final long serialVersionUID = 1L;
 
 }

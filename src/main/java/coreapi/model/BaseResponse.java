@@ -1,4 +1,4 @@
-package com.core.coreapisdk.model;
+package coreapi.model;
 
 import lombok.Data;
 

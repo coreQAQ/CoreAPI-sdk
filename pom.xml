@@ -3,52 +3,193 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.core</groupId>
+    <groupId>io.github.coreqaq</groupId>
     <artifactId>coreapi-sdk</artifactId>
-    <version>0.0.1</version>
+    <name>coreapi-sdk</name>
+    <description>sdk for coreapi</description>
+    <version>0.0.2</version>
+    <url>https://github.com/coreqaq/coreapi-sdk</url>
+    <packaging>jar</packaging>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>coreQAQ</name>
+            <email>coreqaq@gmail.com</email>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/coreqaq/coreapi-sdk</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/coreqaq/coreapi-sdk/issues</url>
+    </issueManagement>
+
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <!-- project java version -->
+        <java.version>17</java.version>
+        <!-- project encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- project dependency package version -->
+        <okhttp.version>3.10.0</okhttp.version>
+        <hutool.version>5.8.8</hutool.version>
+        <lombok.version>1.18.24</lombok.version>
+        <jackson.version>2.13.3</jackson.version>
+
+        <!-- project dependency plugin version -->
+        <apache-maven-plugins.groupId>org.apache.maven.plugins</apache-maven-plugins.groupId>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <license-maven-plugin.version>4.3</license-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>3.10.0</version>
+            <version>${okhttp.version}</version>
         </dependency>
-        <!--hutool工具-->
+        <!-- hutool工具 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.8</version>
+            <version>${hutool.version}</version>
         </dependency>
-        <!--lombok-->
+        <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.3</version>
+            <version>${jackson.version}</version>
         </dependency>
     </dependencies>
+
     <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
+            <!-- compiler plugin -->
+            <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                <groupId>${apache-maven-plugins.groupId}</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                    <encoding>UTF-8</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                     <compilerArgs>
-                        <!-- 保留方法参数名称 -->
                         <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
+
+            <!-- build source package plugin -->
+            <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-source-plugin -->
+            <plugin>
+                <groupId>${apache-maven-plugins.groupId}</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- gen javadoc plugin -->
+            <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin -->
+            <plugin>
+                <groupId>${apache-maven-plugins.groupId}</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- 禁用严格语法检测 -->
+                    <doclint>none</doclint>
+                </configuration>
+            </plugin>
+
+            <!-- gpg sign plugin -->
+            <!-- https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-gpg-plugin -->
+            <plugin>
+                <groupId>${apache-maven-plugins.groupId}</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${maven-gpg-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- publishing to central server plugin -->
+            <!-- https://central.sonatype.com/artifact/org.sonatype.central/central-publishing-maven-plugin -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>${central-publishing-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- 注意：这类必须要和Maven配置环境中的server id对应上 -->
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
 </project>

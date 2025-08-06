@@ -1,4 +1,4 @@
-package com.core.coreapisdk.util;
+package coreapi.util;
 
 import cn.hutool.crypto.digest.DigestUtil;
 
